@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import songModel from "../models/songModel.js";
+import { response } from "express";
 
 const addSong = async (req,res)=>{
     try {
@@ -35,7 +36,23 @@ const addSong = async (req,res)=>{
     }
 } 
 const listSong = async (req,res)=>{
-
+    try {
+        const allSongs = await songModel.find({});
+        res.json({success:true,songs:allSongs});
+    } catch (error) {
+        res.json({success:false});
+    }
 }
 
-export {addSong,listSong}
+
+const removeSong = async(req,res)=>{
+    try {
+        await songModel.findByIdAndDelete(req.body.id);
+        res.json({success:true,message:"Song Removed"});
+    } catch (error) {
+        res.json({success:false});
+    }
+}
+
+
+export {addSong,listSong,removeSong}
