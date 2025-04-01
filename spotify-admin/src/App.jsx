@@ -12,7 +12,7 @@ export const url = 'http://localhost:4000'
 
 const App = () => {
   return (
-    <div className='FLEX items-start min-h-screen'>
+    <div className='flex items-start min-h-screen'>
       <ToastContainer/>
       <Sidebar/>
       <div className='flex-1 h-screen overflow-y-scroll bg-[#F3FFF7]'>

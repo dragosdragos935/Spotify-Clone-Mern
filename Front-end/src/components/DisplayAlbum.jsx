@@ -17,7 +17,7 @@ const DisplayAlbum = ({album}) => {
             setAlbumData(item);
         }
     }
- },[])
+ )},[])
   return albumData ? (
     <>
     <Navbar/>

@@ -49,14 +49,15 @@ const playWithId = async(id)=>{
 
 const previous = async()=>{
     songsData.map(async (item,index)=>{
-        if(track._id === item._id&&index>0)
+        if(track._id === item._id && index>0)
             {
             await setTrack(songsData[index-1]);
             await audioRef.current.play();
             setPlayStatus(true);
         }
+    
 
-    }
+    })
 }
 const next = async()=>{
     songsData.map(async (item,index)=>{
@@ -67,7 +68,7 @@ const next = async()=>{
             setPlayStatus(true);
         }
 
-    }
+    })
 }
 
 const seekSong = async(e)=>{
