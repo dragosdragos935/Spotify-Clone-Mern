@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { assets } from '../assets/assets'
+import axios from 'axios'
+import { url } from '../App';
+import { toast } from 'react-toastify';
 
 const AddSong = () => {
 
@@ -13,11 +16,49 @@ const AddSong = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('name',name);
+      formData.append('desc',desc);
+      formData.append('image',image);
+      formData.append('audio',song);
+      formData.append('album',album);
+
+      const response = await axios.post(`${url}/api/song/add`,formData);
+
+      if(response.data.success){
+        toast.success("Song Added");
+        setName("");
+        setDesc("");
+        setAlbum("none"); 
+        setImage(false);
+        setSong(false);
+
+
+      }
+      else{
+        toast.error("Something went wrong")
+      }
+
+    } catch (error) {
+      toast.error("Error occured");
+    }
+    setLoading(false);
+
     
   }
 
 
-  return (
+  return loading ? (
+    <div className='grid place-items-center min-h-[80vh]'>
+      <div className='w-16 h-16 place-self-center border-4 border-gray-400 border-t-green-800 rounded-full animate-spin'>
+
+      </div>
+
+    </div>
+  ) :(
     <form onSubmit={onSubmitHandler} className='flex flex-col items-start gap-8 text-gray-600'>
       <div className='flex gap-8'>
         <div className='flex flex-col gap-4'>
@@ -42,18 +83,18 @@ const AddSong = () => {
 
     <div className='flex flex-col gap-2.5'>
       <p>Song name</p>
-      <input className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]' placeholder='Type here' required type="text" name="" id="" />
+      <input onChange={(e)=>setName(e.target.value)} value={name} className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]' placeholder='Type here' required type="text" name="" id="" />
 
     </div>
     <div className='flex flex-col gap-2.5'>
       <p>Song Description</p>
-      <input className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]' placeholder='Type here' required type="text" name="" id="" />
+      <input onChange={(e)=>setDesc(e.target.value)} value={desc} className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]' placeholder='Type here' required type="text" name="" id="" />
 
     </div>
 
     <div className='flex flex-col gap-2.5'>
       <p>Album</p>
-      <select  className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[150px] ' name="" id="">
+      <select onChange={(e)=>setAlbum(e.target.value)} defaultValue={album}  className='bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[150px] ' name="" id="">
         <option value="none">None</option>
       </select>
 
