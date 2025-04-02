@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { url } from '../App';
 import { toast } from 'react-toastify';
+import axios from 'axios'
 
 const ListAlbum = () => {
 
@@ -8,18 +9,19 @@ const [data,setData] = useState([]);
 
 const fetchAlbums = async () =>{
   try {
-    const response = await axios.get(`${url}/api/album/list`);
+    const response = await axios.get(`http://localhost:4000/api/album/list`);
     if(response.data.success){
       setData(response.data.albums)
     }
   } catch (error) {
     toast.error('Error occured')
+    
   }
 }
 
 const removeAlbum = async(id) =>{
 try {
-  const response = await axios.post(`${url}/api/a;bum/remove`,{id});
+  const response = await axios.post(`http://localhost:4000/api/a;bum/remove`,{id});
   if(response.data.success){
     toast.success(response.data.message);
     await fetchAlbums();
