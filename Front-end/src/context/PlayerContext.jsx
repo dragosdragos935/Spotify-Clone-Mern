@@ -39,11 +39,29 @@ const PlayerContextProvider = (props) => {
   };
 
   // Play track with a given ID
-  const playWithId = (id) => {
+  const playWithId = async (id) => {
     const song = songsData.find((song) => song._id === id);
     if (song) {
+      // Fetch video and lyrics data for the song
+      await fetchSongDetails(song._id);
       setTrack(song);
       play();
+    }
+  };
+
+  // Fetch additional song details (video and lyrics)
+  const fetchSongDetails = async (songId) => {
+    try {
+      const response = await axios.get(`${url}/api/song/${songId}/details`);
+      if (response.data.success) {
+        setTrack(prevTrack => ({
+          ...prevTrack,
+          videoUrl: response.data.videoUrl,
+          lyrics: response.data.lyrics
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching song details:", error);
     }
   };
 
@@ -74,7 +92,7 @@ const PlayerContextProvider = (props) => {
   // Fetch song data from the backend
   const getSongsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/song/list`);
+      const response = await axios.get(`${url}/api/song/list`);
       setSongsData(response.data.songs);
       if (response.data.songs.length > 0) {
         setTrack(response.data.songs[0]);
@@ -87,7 +105,7 @@ const PlayerContextProvider = (props) => {
   // Fetch album data from the backend
   const getAlbumData = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/album/list`);
+      const response = await axios.get(`${url}/api/album/list`);
       setAlbumsData(response.data.albums);
     } catch (error) {
       console.error("Error fetching albums data:", error);
@@ -149,7 +167,7 @@ const PlayerContextProvider = (props) => {
     next,
     seekSong,
     songsData,
-    albumsData,
+    albumsData
   };
 
   return (

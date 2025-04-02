@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const AddSong = () => {
   const [image, setImage] = useState(null);
   const [song, setSong] = useState(null);
+  const [video, setVideo] = useState(null);
+  const [lyrics, setLyrics] = useState(null);
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [album, setAlbum] = useState('none');
@@ -30,6 +32,14 @@ const AddSong = () => {
         formData.append('audio', song);
       }
 
+      if (video) {
+        formData.append('video', video);
+      }
+
+      if (lyrics) {
+        formData.append('lyrics', lyrics);
+      }
+
       formData.append('album', album);
 
       console.log('Form Data Entries:');
@@ -50,6 +60,8 @@ const AddSong = () => {
         setAlbum('none');
         setImage(null);
         setSong(null);
+        setVideo(null);
+        setLyrics(null);
       } else {
         toast.error('Something went wrong');
         console.log('Failed Response Data:', response.data);
@@ -108,6 +120,23 @@ const AddSong = () => {
           <input onChange={(e) => setImage(e.target.files[0])} type='file' id='image' accept='image/*' hidden />
           <label htmlFor='image'>
             {image ? <img src={URL.createObjectURL(image)} className='w-24 cursor-pointer' alt='' /> : <img src={assets.upload_area} className='w-24 cursor-pointer' alt='' />}
+          </label>
+        </div>
+      </div>
+
+      <div className='flex gap-8'>
+        <div className='flex flex-col gap-4'>
+          <p>Upload Video (MP4)</p>
+          <input onChange={(e) => setVideo(e.target.files[0])} type='file' id='video' accept='video/mp4' hidden />
+          <label htmlFor='video'>
+            <img src={video ? assets.upload_added : assets.upload_area} className='w-24 cursor-pointer' alt='' />
+          </label>
+        </div>
+        <div className='flex flex-col gap-4'>
+          <p>Upload Lyrics (TXT)</p>
+          <input onChange={(e) => setLyrics(e.target.files[0])} type='file' id='lyrics' accept='.txt' hidden />
+          <label htmlFor='lyrics'>
+            <img src={lyrics ? assets.upload_added : assets.upload_area} className='w-24 cursor-pointer' alt='' />
           </label>
         </div>
       </div>
