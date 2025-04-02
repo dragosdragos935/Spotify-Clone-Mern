@@ -21,7 +21,7 @@ const fetchAlbums = async () =>{
 
 const removeAlbum = async(id) =>{
 try {
-  const response = await axios.post(`http://localhost:4000/api/a;bum/remove`,{id});
+  const response = await axios.post(`http://localhost:4000/api/album/remove`,{id});
   if(response.data.success){
     toast.success(response.data.message);
     await fetchAlbums();
