@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useRef,useContext } from 'react'
 import Navbar from './Navbar'
 import { albumsData, songsData } from '../assets/assets'
 import AlbumItem from './AlbumItem'
 import SongItem from './SongItem'
+import { PlayerContext } from '../context/PlayerContext'
 
 const DisplayHome = () => {
 

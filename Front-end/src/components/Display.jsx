@@ -1,47 +1,41 @@
-import React, { useEffect, useRef } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import DisplayHome from './DisplayHome'
-import DisplayAlbum from './DisplayAlbum'
+import React, { useEffect, useRef, useContext } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import DisplayHome from './DisplayHome';
+import DisplayAlbum from './DisplayAlbum';
 import { useLocation } from 'react-router-dom';
+import { PlayerContext } from '../context/PlayerContext';
 
 const Display = () => {
-
-  const {albumsData} = useContext(PlayerContext);
-
-
-
+  const { albumsData } = useContext(PlayerContext);
   const displayRef = useRef();
   const location = useLocation();
-  console.log(location);
-  const isAlbum  = location.pathname.includes("album");
-  console.log(isAlbum);
- const albumId = isAlbum ? location.pathname.split("/").pop():"";
- console.log(albumId);
- const bgColor = isAlbum && albumsData.length >0 ? albumsData.find((x)=> (x._id == albumId)).bgColor : "#121212";
- console.log(bgColor);
 
- useEffect(() => {
-  if(isAlbum){
-    displayRef.current.style.background = `linear-gradient(${bgColor},#121212)`
-  }
-  else
-  {
-    displayRef.current.style.background = `#121212`
-  }
- })
- 
+  const isAlbum = location.pathname.includes("album");
+  const albumId = isAlbum ? location.pathname.split("/").pop() : "";
+
+  const bgColor = isAlbum && albumsData.length > 0
+    ? albumsData.find((x) => x._id == albumId)?.bgColour || "#121212" // Safe access with optional chaining and fallback
+    : "#121212"; // Default color for non-album views
+
+  useEffect(() => {
+    if (isAlbum) {
+      displayRef.current.style.background = `linear-gradient(${bgColor}, #121212)`;
+    } else {
+      displayRef.current.style.background = `#121212`;
+    }
+  }, [isAlbum, bgColor]); // Adding bgColor to the dependency array to handle changes
+
   return (
     <div ref={displayRef} className='w-[100%] m-2 px-6 pt-4 rounded bg-[#121212] text-white overflow-auto lg:w-[75%] lg:ml-0'>
-      {albumsData.length>0
-      ? <Routes>
-        <Route path='/' element={<DisplayHome/>} />
-        <Route path='/album/:id' element={<DisplayAlbum album={albumsData.find((x)=>(x._id==albumId))}/>} />
-      </Routes>
-    : null
-  }
-     
+      {albumsData.length > 0
+        ? <Routes>
+            <Route path='/' element={<DisplayHome />} />
+            <Route path='/album/:id' element={<DisplayAlbum album={albumsData.find((x) => x._id == albumId)} />} />
+          </Routes>
+        : null
+      }
     </div>
-  )
+  );
 }
 
-export default Display
+export default Display;
